@@ -615,6 +615,8 @@
 		</div>
 	</footer>-->
 	</div>
+	
+	<div id="spin"></div>
 
 	<div class="gototop js-top">
 		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
@@ -641,6 +643,8 @@
 	<script src="js/jquery.magnific-popup.min.js"></script>
 	<script src="js/magnific-popup-options.js"></script>
 
+	<script src="js/jquery.babypaunch.spinner.min.js"></script>
+
 	<!-- // <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js"></script> -->
 	<script src="js/simplyCountdown.js"></script>
 	<!-- Main -->
@@ -648,6 +652,16 @@
 	<script src="js/jquery.form-validator.min.js"></script>
 	<script src="js/jquery.modal.min.js" type="text/javascript" charset="utf-8"></script>
 	<script>
+		$(document).ready(function () {
+			$('#rsvp').attr('disabled', true); 
+			$('#rsvpCode').keyup(function () {
+				if ($(this).val().length!= 0) 
+					$('#rsvp').attr('disabled', false); 
+				else 
+					$('#rsvp').attr('disabled', true);
+			})
+		});	
+		
 		var d = new Date(new Date().getTime() + 200 * 120 * 120 * 2000);
 
 		// default example
@@ -661,9 +675,12 @@
 				seconds: 'seg'
 			}
 		});
+		$.validate({});	
+		$("#spin").spinner();
 		$("#rsvp").click(function () {
-			$.validate({
-			});
+					
+			$('#rsvp').prop('disabled', true);
+			$("#spin").show();
 			rsvp($("#rsvpCode").val()).done(function (data) {
 				if (data.Error) {	
 					createModal(data.Message);								
@@ -675,17 +692,22 @@
 					$("#assignedSeats").text(data.SeatInfo.AssignedSeats);
 					$("#rsvp2").show();
 					$("#confirmedSeats").focus();
-				}
+					$('#rsvp').prop('disabled', false);
+				}								
+				$("#spin").hide();				
 			});
 		});
 		$("#confirmSeats").click(function () {
+			$("#spin").show();	
 			confirmRSVP($("#rsvpCode").val(), $("#confirmedSeats").val())
 				.done(function (data) {
 					createModal(data.Message);					
 					$("#rsvpCode").val('');
 					$("#confirmedSeats").val('');
 					$("#rsvp2").slideUp();
+					$('#rsvp').prop('disabled', true);
 					$("#rsvp1").slideDown();
+					$("#spin").hide();	
 				});
 		})
 		function createModal(message)
