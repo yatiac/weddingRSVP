@@ -31,11 +31,11 @@ namespace WeddingRSVP.Api
                 error = true;
                 errorMessage = "Código no encontrado";
             }
-            else if (seatResponse.Confirmed)
-            {
-                error = true;
-                errorMessage = "Reserva ya confirmada";
-            }
+            //else if (seatResponse.Confirmed)
+            //{
+            //    error = true;
+            //    errorMessage = "Reserva ya confirmada";
+            //}
             else
             {
                 error = false;

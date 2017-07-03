@@ -7,9 +7,9 @@
         "databases": [
             {
                 "connectionStringName": "DefaultConnection",
-                "databaseName": "WeddingRSVP_db",
-                "serverName": "weddingrsvp",
-                "user": "rafa_sa",
+                "databaseName": "WeddingRSVP",
+                "serverName": "echeverriagalvez",
+                "user": "yatiac",
                 "password": "",
                 "edition": "",
                 "size": "",

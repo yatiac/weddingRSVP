@@ -35,8 +35,9 @@
 	<!--[if lt IE 9]>
 	<script src="js/respond.min.js"></script>
 	<![endif]-->
-	</head>
-	<body>
+</head>
+
+<body>
 	<div class="fh5co-loader"></div>
 
 	<div id="page">
@@ -93,13 +94,8 @@
 									<div class="col-md-8 col-sm-8">
 										<div class="form-group">
 											<label for="name" class="sr-only">Código RSVP</label>
-											<input 
-											data-validation="length" 
-											data-validation-length="min1" 
-											data-validation-error-msg="El Código no puede estar vacío" 
-											autocomplete="off"
-											type="name"
-												class="form-control" id="rsvpCode" placeholder="Código RSVP">
+											<input data-validation="length" data-validation-length="min1" data-validation-error-msg="El Código no puede estar vacío"
+											 autocomplete="off" type="name" class="form-control" id="rsvpCode" placeholder="Código RSVP">
 										</div>
 									</div>
 									<div class="col-md-4 col-sm-4">
@@ -116,12 +112,8 @@
 											<label>Puestos Asignado: </label>
 											<h3 id="assignedSeats"> </h3>
 											<label>Puestos a Confirmar: </label>
-											<input 
-											data-validation="length" 
-											data-validation-length="min1" 
-											data-validation-error-msg="El número de puestos n o puede estar vacío"
-											autocomplete="off"
-												type="name" style="text-align: center" class="form-control" id="confirmedSeats" placeholder="Puestos a Confirmar">
+											<input id="confirmar" data-validation="length" data-validation-length="min1" data-validation-error-msg="El número de puestos n o puede estar vacío"
+											 autocomplete="off" type="name" style="text-align: center" class="form-control" id="confirmedSeats" placeholder="Puestos a Confirmar"><span id="errmsg"></span>
 										</div>
 									</div>
 									<div class="col-md-4 col-sm-4">
@@ -591,7 +583,7 @@
 		</div>
 	</footer>-->
 	</div>
-	
+
 	<div id="spin"></div>
 
 	<div class="gototop js-top">
@@ -628,69 +620,77 @@
 	<script src="js/jquery.form-validator.min.js"></script>
 	<script src="js/jquery.modal.min.js" type="text/javascript" charset="utf-8"></script>
 	<script>
-		$(document).ready(function () {
-			$('#rsvp').attr('disabled', true); 
-			$('#rsvpCode').keyup(function () {
-				if ($(this).val().length!= 0) 
-					$('#rsvp').attr('disabled', false); 
-				else 
-					$('#rsvp').attr('disabled', true);
-			})
-		});	
-		
-		var d = new Date(new Date().getTime() + 200 * 120 * 120 * 2000);
+											$(document).ready(function () {
+												$('#rsvp').attr('disabled', true);
+												$('#rsvpCode').keyup(function () {
+													if ($(this).val().length != 0)
+														$('#rsvp').attr('disabled', false);
+													else
+														$('#rsvp').attr('disabled', true);
+												})
+											});
 
-		// default example
-		simplyCountdown('.simply-countdown-one', {
-			year: 2017,
-			month: 10,
-			day: 1,
-			inline: false,
-			words: {
-				minutes: 'min',
-				seconds: 'seg'
-			}
-		});
-		$.validate({});	
-		$("#spin").spinner();
-		$("#rsvp").click(function () {
-					
-			$('#rsvp').prop('disabled', true);
-			$("#spin").show();
-			rsvp($("#rsvpCode").val()).done(function (data) {
-				if (data.Error) {	
-					createModal(data.Message);								
-					$("#rsvpCode").val('');
-				}
-				else {
-					$("#rsvp1").slideUp();
-					$("#familyName").text(data.SeatInfo.FamilyName);
-					$("#assignedSeats").text(data.SeatInfo.AssignedSeats);
-					$("#rsvp2").show();
-					$("#confirmedSeats").focus();
-					$('#rsvp').prop('disabled', false);
-				}								
-				$("#spin").hide();				
-			});
-		});
-		$("#confirmSeats").click(function () {
-			$("#spin").show();	
-			confirmRSVP($("#rsvpCode").val(), $("#confirmedSeats").val())
-				.done(function (data) {
-					createModal(data.Message);					
-					$("#rsvpCode").val('');
-					$("#confirmedSeats").val('');
-					$("#rsvp2").slideUp();
-					$('#rsvp').prop('disabled', true);
-					$("#rsvp1").slideDown();
-					$("#spin").hide();	
-				});
-		})
-		function createModal(message)
-		{
-			var div = $('<div><h3 style="color: #000">'+ message + '</h3></div>');
-			div.appendTo('body').modal();	
-		}
+											$("#confirmar").keypress(function (e) {
+												//if the letter is not digit then display error and don't type anything
+												if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+													//display error message
+													$("#errmsg").html("Digits Only").show().fadeOut("slow");
+													return false;
+												}
+											});
+
+											var d = new Date(new Date().getTime() + 200 * 120 * 120 * 2000);
+
+											// default example
+											simplyCountdown('.simply-countdown-one', {
+												year: 2017,
+												month: 10,
+												day: 1,
+												inline: false,
+												words: {
+													minutes: 'min',
+													seconds: 'seg'
+												}
+											});
+											$.validate({});
+											$("#spin").spinner();
+											$("#rsvp").click(function () {
+
+												$('#rsvp').prop('disabled', true);
+												$("#spin").show();
+												rsvp($("#rsvpCode").val()).done(function (data) {
+													if (data.Error) {
+														createModal(data.Message);
+														$("#rsvpCode").val('');
+													}
+													else {
+														$("#rsvp1").slideUp();
+														$("#familyName").text(data.SeatInfo.FamilyName);
+														$("#assignedSeats").text(data.SeatInfo.AssignedSeats);
+														$("#rsvp2").show();
+														$("#confirmedSeats").focus();
+														$('#rsvp').prop('disabled', false);
+													}
+													$("#spin").hide();
+												});
+											});
+											$("#confirmSeats").click(function () {
+												$("#spin").show();
+												confirmRSVP($("#rsvpCode").val(), $("#confirmedSeats").val())
+													.done(function (data) {
+														createModal(data.Message);
+														$("#rsvpCode").val('');
+														$("#confirmedSeats").val('');
+														$("#rsvp2").slideUp();
+														$('#rsvp').prop('disabled', true);
+														$("#rsvp1").slideDown();
+														$("#spin").hide();
+													});
+											})
+											function createModal(message) {
+												var div = $('<div><h3 style="color: #000">' + message + '</h3></div>');
+												div.appendTo('body').modal();
+											}
 	</script>
 
 </body>
