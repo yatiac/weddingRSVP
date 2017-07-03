@@ -70,8 +70,9 @@ namespace WeddingRSVP.Api
                         response.Message = "Se ha confirmado su RSVP exitosamente. Numero de puestos: " + confirmedSeats;
                         if(confirmedSeats > 0)
                         {
-                            response.Message += ".\r\nTe esperamos en nuestra boda :).";
+                            response.Message += ".\r\nTe esperamos en nuestra boda :)";
                         }
+                        response.Message += ".\r\n Puedes realizar cambios hasta el 7 de Septiembre 2017.";
                         context.SaveChanges();
                     }
                 }

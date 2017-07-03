@@ -107,13 +107,17 @@
 								<form class="form-inline" onsubmit="return false;">
 									<div class="col-md-offset-2 col-md-4 col-sm-4">
 										<div class="form-group">
-											<label>Familia: </label>
+											<label>Invitado: </label>
 											<h3 id="familyName"></h3>
-											<label>Puestos Asignado: </label>
+											<label>Puestos Asignados: </label>
 											<h3 id="assignedSeats"> </h3>
+											<div id="divConfirmed">
+											<label>Puestos ya confirmados: </label>
+											<h3 id="confirmedSeats"> </h3>
+											</div>
 											<label>Puestos a Confirmar: </label>
-											<input id="confirmar" data-validation="length" data-validation-length="min1" data-validation-error-msg="El número de puestos n o puede estar vacío"
-											 autocomplete="off" type="name" style="text-align: center" class="form-control" id="confirmedSeats" placeholder="Puestos a Confirmar"><span id="errmsg"></span>
+											<input data-validation="length" data-validation-length="min1" data-validation-error-msg="El número de puestos n o puede estar vacío"
+											 autocomplete="off" type="name" style="text-align: center" class="form-control" id="seatsToConfirm" placeholder="Puestos a Confirmar"><span id="errmsg" class="form-error"></span>
 										</div>
 									</div>
 									<div class="col-md-4 col-sm-4">
@@ -630,11 +634,11 @@
 												})
 											});
 
-											$("#confirmar").keypress(function (e) {
+											$("#seatsToConfirm").keypress(function (e) {
 												//if the letter is not digit then display error and don't type anything
 												if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
 													//display error message
-													$("#errmsg").html("Digits Only").show().fadeOut("slow");
+													$("#errmsg").html("Sólo Números").show().fadeOut("slow");
 													return false;
 												}
 											});
@@ -654,6 +658,7 @@
 											});
 											$.validate({});
 											$("#spin").spinner();
+											$("#divConfirmed").hide();
 											$("#rsvp").click(function () {
 
 												$('#rsvp').prop('disabled', true);
@@ -667,8 +672,13 @@
 														$("#rsvp1").slideUp();
 														$("#familyName").text(data.SeatInfo.FamilyName);
 														$("#assignedSeats").text(data.SeatInfo.AssignedSeats);
+														if(data.SeatInfo.ConfirmedSeats > 0)
+														{
+															$("#divConfirmed").show();
+															$("#confirmedSeats").text(data.SeatInfo.ConfirmedSeats);
+														}														
 														$("#rsvp2").show();
-														$("#confirmedSeats").focus();
+														$("#seatsToConfirm").focus();
 														$('#rsvp').prop('disabled', false);
 													}
 													$("#spin").hide();
@@ -676,11 +686,13 @@
 											});
 											$("#confirmSeats").click(function () {
 												$("#spin").show();
-												confirmRSVP($("#rsvpCode").val(), $("#confirmedSeats").val())
+												confirmRSVP($("#rsvpCode").val(), $("#seatsToConfirm").val())
 													.done(function (data) {
 														createModal(data.Message);
 														$("#rsvpCode").val('');
-														$("#confirmedSeats").val('');
+														$("#seatsToConfirm").val('');
+														$("#confirmedSeats").text('');
+														$("#divConfirmed").hide();
 														$("#rsvp2").slideUp();
 														$('#rsvp').prop('disabled', true);
 														$("#rsvp1").slideDown();
